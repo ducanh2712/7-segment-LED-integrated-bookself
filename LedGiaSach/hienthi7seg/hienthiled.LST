@@ -1,0 +1,145 @@
+C51 COMPILER V9.01   HIENTHILED                                                            10/29/2020 11:49:41 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE HIENTHILED
+OBJECT MODULE PLACED IN hienthiled.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE hienthiled.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include"main.h"
+   3          #include"..\lib\I2C.h"
+   4          #include"..\lib\RTC_DS3231.h"
+   5          #include "..\lib\delay.h"
+   6          #include "..\lib\LCD8.h"
+   7          
+   8          #define led1 P3_2
+   9          #define led2 P1
+  10          #define led3 P0 
+  11          #define led4 P2
+  12          #define caidat P3_5
+  13          #define tang P3_6
+  14          #define giam P3_7
+  15          
+  16          unsigned char gio,phut,giay;
+  17          char so[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
+  18          
+  19          void hienThi(){
+  20   1              bit am_pm;
+  21   1              unsigned char chuc0,chuc1,donVi1;
+  22   1              Ds3231_Read_Time(&gio,&phut,&giay,12);
+  23   1              am_pm = Ds3231_Read_Time(&gio,&phut,&giay,12);
+  24   1              chuc0 = gio%10;
+  25   1              chuc1 = phut/10;donVi1 = phut%10;
+  26   1              if(gio == 0 && am_pm == 0)
+  27   1              {
+  28   2                      led1 = 1;
+  29   2                      led2 = so[2];
+  30   2                      led3 = so[chuc1];
+  31   2                      led4 = so[donVi1];      
+  32   2              }
+  33   1              else
+  34   1              {
+  35   2                      led2 = so[chuc0];
+  36   2                      led3 = so[chuc1];
+  37   2                      led4 = so[donVi1];
+  38   2                      if(gio/10 == 1)led1 = 0;
+  39   2                      if(gio/10 != 1)led1 = 1;
+  40   2              }
+  41   1      }
+  42          
+  43          void SetTime(mode)
+  44          {
+  45   1              if(tang == 0)
+  46   1              {
+  47   2                      while(tang==0);
+  48   2                      if(mode == 1) { gio++;if(gio>11)gio=0;}
+  49   2                      if(mode == 2) { phut++;if(phut>59)phut=0;}
+  50   2                      Ds3231_Write_Time(gio,phut,giay,12,0);
+  51   2              }
+  52   1              if(giam == 0)
+  53   1              {
+  54   2                      while(giam==0);
+  55   2      
+C51 COMPILER V9.01   HIENTHILED                                                            10/29/2020 11:49:41 PAGE 2   
+
+  56   2      
+  57   2                      if(mode == 1 && gio != 0) { gio--;}
+  58   2                      else if(mode    == 2 && phut !=0) { phut--;}
+  59   2                      else if(mode == 1 && gio == 0) gio = 11;
+  60   2                      else if(mode == 2 && phut == 0) phut = 59;
+  61   2                      Ds3231_Write_Time(gio,phut,giay,12,0);
+  62   2              }
+  63   1      }
+  64          
+  65          void main(){
+  66   1              unsigned char mode = 0;
+  67   1              I2c_Init();
+  68   1              Ds3231_Init();
+  69   1              led1 = 0;
+  70   1       //     Ds3231_Write_Time(9,07,00,12,1);
+  71   1      
+  72   1              while(1){       
+  73   2              hienThi();
+  74   2      }       
+  75   1      //                      if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+  76   1      //      if(mode ==1)
+  77   1      //              {
+  78   1      //                      while(mode ==1)
+  79   1      //                      {
+  80   1      //                      //      Ds3231_Read_Time(&gio, &phut, &giay, 12);
+  81   1      //                              for(i=0;i<10;i++){
+  82   1      //                              if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+  83   1      //                              led1=0;
+  84   1      //                              led2=0x00;
+  85   1      //                              SetTime(1);
+  86   1      //                              delay(50);}
+  87   1      //                              for(i=0;i<10;i++){
+  88   1      //                              if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+  89   1      //                              hienThi();
+  90   1      //                              SetTime(1);
+  91   1      //                              delay(50);}
+  92   1      //                      }       
+  93   1      //              }
+  94   1      //              else if(mode ==2)
+  95   1      //              {
+  96   1      //                      while(mode ==2)
+  97   1      //                      {
+  98   1      //                              for(i=0;i<10;i++){
+  99   1      //                      //      Ds3231_Read_Time(&gio, &phut, &giay, 12);
+ 100   1      //                              if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+ 101   1      //                              led3=0x00;
+ 102   1      //                              led4=0x00;
+ 103   1      //                              delay(50);}
+ 104   1      //                              for(i=0;i<10;i++){
+ 105   1      //                              if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+ 106   1      //                              hienThi();
+ 107   1      //                              SetTime(2);
+ 108   1      //                              delay(50);}
+ 109   1      //                      }       
+ 110   1      //              }       
+ 111   1      //              else
+ 112   1      //              {
+ 113   1      //              //      Ds3231_Read_Time(&gio, &phut, &giay, 12);
+ 114   1      //                      if(caidat == 0) {while(caidat==0);mode=mode+1;mode=mode%3;}
+ 115   1      //                      hienThi();
+ 116   1      //              }
+ 117   1              }
+C51 COMPILER V9.01   HIENTHILED                                                            10/29/2020 11:49:41 PAGE 3   
+
+ 118          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    336    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

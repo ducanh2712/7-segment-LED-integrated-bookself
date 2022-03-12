@@ -1,0 +1,129 @@
+C51 COMPILER V9.01   I2C                                                                   10/29/2020 11:49:41 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN .\I2C.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\lib\I2C.c BROWSE DEBUG OBJECTEXTEND PRINT(.\I2C.lst) OBJECT(.\I2C.obj)
+
+line level    source
+
+   1          #include"main.h"
+   2          #include"I2c.h"
+   3          #include "..\lib\delay.h"
+   4          #define I2C_SCL P3_3
+   5          #define I2C_SDA P3_4
+   6          
+   7          bit I2c_Get_Ack();
+   8          void I2c_Ack();
+   9          void I2c_Nak();
+  10          
+  11          void I2c_Init() //Khoi tao I2C
+  12          {
+  13   1              I2C_SCL=1;
+  14   1              I2C_SDA=1;
+  15   1      }
+  16          
+  17          void I2c_Start() //Bat dau I2C
+  18          {
+  19   1              I2C_SCL = 1;
+  20   1              
+  21   1              I2C_SDA = 0;
+  22   1              
+  23   1              I2C_SCL = 0;
+  24   1      }
+  25          
+  26          bit I2c_Get_Ack() //Master nhan 
+  27          {
+  28   1              bit result;
+  29   1          I2C_SDA = 1;
+  30   1              
+  31   1          I2C_SCL = 1;
+  32   1              
+  33   1              result = I2C_SDA;
+  34   1          I2C_SCL = 0;
+  35   1              return result;
+  36   1      }
+  37          
+  38          bit I2c_Write(unsigned char dat) //Gui du lieu tu Master
+  39          {
+  40   1              unsigned char i;
+  41   1              for(i=0;i<8;i++)
+  42   1              {
+  43   2                  I2C_SDA = (bit)(dat&0x80);  
+  44   2                  I2C_SCL = 1;
+  45   2                      
+  46   2                      I2C_SCL = 0;
+  47   2                  dat<<=1;
+  48   2              }
+  49   1              return(I2c_Get_Ack());
+  50   1      }
+  51          
+  52          void I2c_Ack() //Bao Ack tu Master
+  53          {
+  54   1              I2C_SDA = 0;
+  55   1              
+C51 COMPILER V9.01   I2C                                                                   10/29/2020 11:49:41 PAGE 2   
+
+  56   1              I2C_SCL = 1;
+  57   1              
+  58   1          I2C_SCL = 0;
+  59   1      }
+  60          
+  61          void I2c_Nak() //Bao NAck tu Master
+  62          {
+  63   1          I2C_SDA = 1;
+  64   1              
+  65   1          I2C_SCL = 1;
+  66   1              
+  67   1          I2C_SCL = 0;
+  68   1      }
+  69          
+  70          unsigned char I2c_Read(bit ack) //Doc du lieu tu Master
+  71          {
+  72   1          unsigned char i, dat=0;
+  73   1          for(i=0;i<8;i++)
+  74   1              {
+  75   2                  I2C_SDA = 1;
+  76   2                      
+  77   2                  I2C_SCL = 1;
+  78   2                      
+  79   2                  dat <<= 1;
+  80   2                      if(I2C_SDA)
+  81   2                      {
+  82   3                              dat |= 0x01;
+  83   3                      }
+  84   2                      I2C_SCL = 0;
+  85   2          }
+  86   1              if(ack)
+  87   1              {
+  88   2                      I2c_Ack();
+  89   2              }
+  90   1              else
+  91   1              {
+  92   2                      I2c_Nak();
+  93   2              }
+  94   1          return dat;
+  95   1      }
+  96          
+  97          void I2c_Stop() // Dung I2C
+  98          {       
+  99   1              I2C_SDA = 0;
+ 100   1              
+ 101   1              I2C_SCL = 1;
+ 102   1              
+ 103   1              I2C_SDA = 1;
+ 104   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    103    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

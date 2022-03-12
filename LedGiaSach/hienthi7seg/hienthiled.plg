@@ -1,0 +1,34 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+D:\BackUp\ProjectDevzone\LedGiaSach\hienthi7seg\hienthiled.uvproj
+Project File Date:  10/11/2020
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling hienthiled.c...
+HIENTHILED.C(70): warning C206: 'Ds1307_Write_Time': missing function-prototype
+HIENTHILED.C(70): error C267: 'Ds1307_Write_Time': requires ANSI-style prototype
+compiling delay.c...
+compiling I2C.c...
+compiling RTC_DS3231.c...
+Target not created
+Build target 'Target 1'
+compiling hienthiled.c...
+compiling delay.c...
+compiling I2C.c...
+compiling RTC_DS3231.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SETTIME?HIENTHILED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?DELAY
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DS3231_WRITE_BYTES?RTC_DS3231
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DS3231_READ_BYTES?RTC_DS3231
+Program Size: data=57.4 xdata=0 code=1422
+creating hex file from "hienthiled"...
+"hienthiled" - 0 Error(s), 4 Warning(s).

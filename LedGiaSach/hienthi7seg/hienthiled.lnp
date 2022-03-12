@@ -1,0 +1,6 @@
+"hienthiled.obj",
+".\delay.obj",
+".\I2C.obj",
+".\RTC_DS3231.obj" 
+TO "hienthiled" 
+RAMSIZE(256) 
